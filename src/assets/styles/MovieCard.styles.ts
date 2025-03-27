@@ -37,14 +37,12 @@ export const movieCardMedia: SxProps<Theme> = {
   objectPosition: "center",
   boxShadow: 3,
   transition: "transform 0.3s ease-in-out",
-  border: "2px solid green",
   "&:hover": {
     transform: "scale(1.05)",
   },
 };
 
 export const movieCardContent: SxProps<Theme> = {
-  // border: "2px solid green",
   px: 1.5,
   py: 1.5,
 

@@ -29,43 +29,43 @@ export const MovieContextProvider: React.FC<{ children: ReactNode }> = ({ childr
   const [favorites, setFavorites] = useState<Movie[]>([]);
 
   useEffect(() => {
-    const fetchAllMovies = async () => {
+    const loadData = async () => {
       try {
         setLoading(true);
-        const allMovies = await getAllMovies();
-        setMovies(allMovies);
+        const [initialMovies, savedFavorites] = await Promise.all([
+          getAllMovies(),
+          loadFavorites()
+        ]);
+        setMovies(initialMovies);
+        setFavorites(savedFavorites);
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to load movies');
+        setError(getErrorMessage(err));
       } finally {
         setLoading(false);
       }
     };
-
-    fetchAllMovies();
+    loadData();
   }, []);
 
-  useEffect(() => {
-    const savedFavorites = localStorage.getItem('favoriteMovies');
-    if (savedFavorites) {
-      setFavorites(JSON.parse(savedFavorites));
-    }
-  }, []);
+  const loadFavorites = async (): Promise<Movie[]> => {
+    const saved = localStorage.getItem('favoriteMovies');
+    return saved ? JSON.parse(saved) : [];
+  };
 
-  const saveFavoritesToLocalStorage = (newFavorites: Movie[]) => {
+  const saveFavorites = (newFavorites: Movie[]) => {
     localStorage.setItem('favoriteMovies', JSON.stringify(newFavorites));
   };
 
   const searchMovies = async (term: string) => {
     if (!term.trim()) return;
 
-    setLoading(true);
-    setError(null);
-
     try {
+      setLoading(true);
+      setError(null);
       const results = await getMoviesBySearch(term);
       setMovies(results);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An unknown error occurred');
+      setError(getErrorMessage(err));
       setMovies([]);
     } finally {
       setLoading(false);
@@ -73,35 +73,37 @@ export const MovieContextProvider: React.FC<{ children: ReactNode }> = ({ childr
   };
 
   const fetchMovieDetails = async (imdbID: string) => {
-    setLoading(true);
-    setError(null);
-
     try {
+      setLoading(true);
+      setError(null);
       const movie = await getMovieById(imdbID);
+      console.log(movie);
       setSelectedMovie(movie);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An unknown error occurred');
+      setError(getErrorMessage(err));
     } finally {
       setLoading(false);
     }
   };
 
   const addToFavorites = (movie: Movie) => {
-    if (!favorites.some((fav) => fav.imdbID === movie.imdbID)) {
+    if (!favorites.some(fav => fav.imdbID === movie.imdbID)) {
       const newFavorites = [...favorites, movie];
       setFavorites(newFavorites);
-      saveFavoritesToLocalStorage(newFavorites);
+      saveFavorites(newFavorites);
     }
   };
 
   const removeFromFavorites = (imdbID: string) => {
-    const newFavorites = favorites.filter((movie) => movie.imdbID !== imdbID);
+    const newFavorites = favorites.filter(movie => movie.imdbID !== imdbID);
     setFavorites(newFavorites);
-    saveFavoritesToLocalStorage(newFavorites);
+    saveFavorites(newFavorites);
   };
 
-  const isFavorite = (imdbID: string) => {
-    return favorites.some((movie) => movie.imdbID === imdbID);
+  const isFavorite = (imdbID: string) => favorites.some(movie => movie.imdbID === imdbID);
+
+  const getErrorMessage = (error: unknown): string => {
+    return error instanceof Error ? error.message : 'An unknown error occurred';
   };
 
   return (
@@ -133,4 +135,4 @@ export const useMovieContext = () => {
     throw new Error('useMovieContext must be used within a MovieContextProvider');
   }
   return context;
-};  
+};

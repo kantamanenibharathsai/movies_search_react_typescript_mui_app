@@ -9,13 +9,11 @@ const styles = {
     top: "65px",
     height: "auto",
     width: "100%",
-    border: "3px solid black",
   } as SxProps<Theme>,
 
   mainContent: {
     paddingTop: "30px",
     paddingBottom: "80px",
-    border: "3px solid red",
   } as SxProps<Theme>
 };
 
