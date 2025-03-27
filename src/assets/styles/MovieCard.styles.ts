@@ -4,21 +4,45 @@ import { SxProps, Theme } from "@mui/material/styles";
 export const  movieListContainer: SxProps<Theme> ={
   mt: 4,
 } 
-export const movieGrid: SxProps<Theme> ={
-  justifyContent: "center",
-}
+
+export const movieGridItem: SxProps<Theme> = {
+  display: 'flex',
+  justifyContent: 'flex-start', 
+  padding: '0 !important',
+  '& > div': {
+    width: '100%'
+  }
+};
+
+export const movieGrid: SxProps<Theme> = {
+  display: 'grid',
+  gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 2fr))',
+  gap: '24px',
+  width: '100%',
+  padding: '16px',
+  justifyItems: 'center',
+  '@media (max-width: 600px)': {
+    gap: '16px',
+    justifyItems: 'center',
+  },
+  '@media (min-width: 1200px)': {
+    gridTemplateColumns: 'repeat(auto-fill, minmax(230px, 1fr))',
+    justifyContent: 'center',
+    justifyItems: 'center',
+  }
+};
 
 export const movieCard: SxProps<Theme> = {
   height: "400px",
-  width: "280px",
+  width: "100%",
+  maxWidth: "280px",
   display: "flex",
   flexDirection: "column",
   position: "relative",
   borderRadius: "12px",
   overflow: "hidden",
   boxShadow: 3,
-  cursor: "pointer",
-  justifySelf: "center",
+  cursor: "pointer"
 };
 
 export const imgContainer: SxProps<Theme> = {

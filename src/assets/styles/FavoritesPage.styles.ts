@@ -7,7 +7,7 @@ export const favoritesTitle: SxProps<Theme> = {
 };
 
 export const favoritesContainer: SxProps<Theme> = {
-  border: "2px solid pink"
+  
 };
 
 export const noFavorites: SxProps<Theme> = {

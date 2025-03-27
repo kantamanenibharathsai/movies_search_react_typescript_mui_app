@@ -33,44 +33,23 @@ export const MovieList: React.FC = () => {
 
   return (
     <Box sx={movieListContainer}>
-      <Grid
-        container
-        spacing={4}
-        sx={movieGrid}
-        justifyItems={"center"}
-        justifyContent={"center"}
-        alignItems={"center"}
-      >
+      <Box sx={movieGrid}>
         {movies.map((movie) => (
-          <Grid
-            item
+          <MovieCard
             key={movie.imdbID}
-            xs={12}
-            sm={6}
-            md={4}
-            lg={3}
-            justifyItems={"center"}
-            justifyContent={"center"}
-            alignItems={"center"}
-          >
-            <MovieCard
-              movie={movie}
-              onClick={() => {
-                console.log("movie clicked", selectedMovie);
-                fetchMovieDetails(movie.imdbID);
-              }}
-              isFavorite={isFavorite(movie.imdbID)}
-              onToggleFavorite={() => {
-                if (isFavorite(movie.imdbID)) {
-                  removeFromFavorites(movie.imdbID);
-                } else {
-                  addToFavorites(movie);
-                }
-              }}
-            />
-          </Grid>
+            movie={movie}
+            onClick={() => fetchMovieDetails(movie.imdbID)}
+            isFavorite={isFavorite(movie.imdbID)}
+            onToggleFavorite={() => {
+              if (isFavorite(movie.imdbID)) {
+                removeFromFavorites(movie.imdbID);
+              } else {
+                addToFavorites(movie);
+              }
+            }}
+          />
         ))}
-      </Grid>
+      </Box>
     </Box>
   );
 };

@@ -8,11 +8,7 @@ import useDebounce from '../../hooks/useDebounce';
 export const SearchBar: React.FC = () => {
   const { searchTerm, setSearchTerm, searchMovies } = useMovieContext();
   const [localSearchTerm, setLocalSearchTerm] = useState(searchTerm);
-  
-  // Very short debounce just to prevent rapid firing
   const debouncedSearchTerm = useDebounce(localSearchTerm, 200);
-
-  // Trigger search immediately on any change
   useEffect(() => {
     const performSearch = async () => {
       await searchMovies(debouncedSearchTerm);
