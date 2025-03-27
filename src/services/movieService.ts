@@ -34,17 +34,19 @@ export const getAllMovies = async (): Promise<Movie[]> => {
 
 export const getMoviesBySearch = async (searchTerm: string): Promise<Movie[]> => {
   try {
-    if (!searchTerm.trim()) throw new Error('Search term cannot be empty');
-
+    if (!searchTerm.trim()) {
+      return getAllMovies();
+    }
     const response = await fetch(`${BASE_URL}?apikey=${API_KEY}&s=${encodeURIComponent(searchTerm)}`);
     if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-
     const data: MovieSearchResult = await response.json();
-    if (data.Response === 'False') throw new Error(data.Error || 'No results found');
-
+    if (data.Response === 'False') {
+      return [];
+    }
     return data.Search || [];
   } catch (error) {
-    return handleApiError(error);
+    console.error('Search error:', error);
+    return [];
   }
 };
 
